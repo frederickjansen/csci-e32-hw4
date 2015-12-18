@@ -15,7 +15,6 @@ app.get('/zombify/:text', function (req, res) {
   var translation = translator.zombify(text);
   res.status(200);
   res.json({
-    "status": 200,
     "message": translation
   });
 });
@@ -25,7 +24,6 @@ app.get('/unzombify/:text', function (req, res) {
   var translation = translator.unzombify(text);
   res.status(200);
   res.json({
-    "status": 200,
     "message": translation
   });
 });
