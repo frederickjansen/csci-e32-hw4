@@ -5,6 +5,10 @@ var fs = require('fs');
 
 var app = express();
 
+app.use(function(req, res, next){
+  console.log((new Date()).toString() + " - " + req.method + " - " + req.url + " - " + req.headers['user-agent']);
+  next();
+});
 
 // catch 404 and forward to error handler
 app.get('*', function(req, res) {
