@@ -5,16 +5,19 @@ var fs = require('fs');
 
 var app = express();
 
+// Log user
 app.use(function (req, res, next) {
-  console.log((new Date()).toString() + " - " + req.method + " - " + req.url + " - " + req.headers['user-agent']);
+  console.log((new Date()).toString() + " - " + res.statusCode + " - " + req.url + " - " + req.headers['user-agent']);
   next();
 });
 
+// Transform Markdown
 app.get('/', function(req, res) {
   var file = fs.createReadStream('README.md');
   file.pipe(markdownTransformer()).pipe(res);
 });
 
+// Translate english to zombie
 app.get('/zombify/:text', function (req, res) {
   var text = req.params.text;
   if (inputTooLong(res, text, 1000)) {
@@ -27,6 +30,7 @@ app.get('/zombify/:text', function (req, res) {
   });
 });
 
+// Translate zombie to english
 app.get('/unzombify/:text', function (req, res) {
   var text = req.params.text;
   if (inputTooLong(res, text, 1000)) {
@@ -39,6 +43,7 @@ app.get('/unzombify/:text', function (req, res) {
   });
 });
 
+// Check for input that is too long
 function inputTooLong(res, input, maxLength) {
   if (input.length > maxLength) {
     res.status(414);
@@ -51,6 +56,7 @@ function inputTooLong(res, input, maxLength) {
   return false;
 }
 
+// 404 status
 app.get('*', function (req, res) {
   res.status(404);
   res.json({
@@ -58,7 +64,6 @@ app.get('*', function (req, res) {
     "message": "Not found"
   });
 });
-
 
 app.listen(7000);
 
