@@ -10,6 +10,11 @@ app.use(function (req, res, next) {
   next();
 });
 
+app.get('/', function(req, res) {
+  var file = fs.createReadStream('README.md');
+  file.pipe(markdownTransformer()).pipe(res);
+});
+
 app.get('/zombify/:text', function (req, res) {
   var text = req.params.text;
   if (inputTooLong(res, text, 1000)) {
