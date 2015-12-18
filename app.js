@@ -12,6 +12,9 @@ app.use(function (req, res, next) {
 
 app.get('/zombify/:text', function (req, res) {
   var text = req.params.text;
+  if (inputTooLong(res, text, 1000)) {
+    return;
+  }
   var translation = translator.zombify(text);
   res.status(200);
   res.json({
@@ -21,12 +24,27 @@ app.get('/zombify/:text', function (req, res) {
 
 app.get('/unzombify/:text', function (req, res) {
   var text = req.params.text;
+  if (inputTooLong(res, text, 1000)) {
+    return;
+  }
   var translation = translator.unzombify(text);
   res.status(200);
   res.json({
     "message": translation
   });
 });
+
+function inputTooLong(res, input, maxLength) {
+  if (input.length > maxLength) {
+    res.status(414);
+    res.json({
+      "status": 414,
+      "message": 'Input too long'
+    });
+    return true;
+  }
+  return false;
+}
 
 app.get('*', function (req, res) {
   res.status(404);
